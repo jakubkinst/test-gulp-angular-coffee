@@ -1,6 +1,7 @@
 "use strict"
-angular.module("testGulpAngular").controller "NavbarCtrl", [
-  "$scope"
-  ($scope) ->
+
+class NavbarCtrl
+  constructor: (@$scope) ->
     $scope.date = new Date()
-]
+
+module.exports = NavbarCtrl

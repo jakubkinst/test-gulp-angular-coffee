@@ -6,6 +6,8 @@ var $ = require('gulp-load-plugins')({
   pattern: ['gulp-*', 'main-bower-files', 'uglify-save-license']
 });
 
+var cofeeify = require('gulp-coffeeify');
+
 function handleError(err) {
   console.error(err.toString());
   this.emit('end');
@@ -26,15 +28,16 @@ gulp.task('styles', function () {
     .pipe($.size());
 });
 
-gulp.task('scripts', function () {
-  return gulp.src('src/{app,components}/**/*.coffee')
-    .pipe($.coffee({
-      bare: true
-    }))
-    .pipe($.jshint())
-    .pipe($.jshint.reporter('jshint-stylish'))
-    .pipe(gulp.dest('.tmp/scripts'))
-    .pipe($.size());
+gulp.task('scripts', function() {
+  gulp.src('src/app/app.coffee', { read: false })
+      .pipe($.browserify({
+        transform: ['coffeeify'],
+        extensions: ['.coffee'],
+        debug: !gulp.env.production
+      }))
+      .pipe($.rename('app.js'))
+      .pipe(gulp.dest('.tmp/scripts'))
+      .pipe($.size());
 });
 
 gulp.task('partials', function () {
